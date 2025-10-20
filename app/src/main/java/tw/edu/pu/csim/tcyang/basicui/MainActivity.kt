@@ -72,13 +72,13 @@ fun Main(modifier: Modifier = Modifier) {
     // **狀態變數 1: 追蹤要顯示的文字 (abc 或 def)**
     var displayText by remember { mutableStateOf("abc") }
     var mper: MediaPlayer? by remember { mutableStateOf(null) }
-    /*DisposableEffect(Unit) { // Unit 作為 key 表示這個 effect 只會執行一次
+    DisposableEffect(Unit) { // Unit 作為 key 表示這個 effect 只會執行一次
         onDispose {
             // 釋放 MediaPlayer 資源，避免記憶體洩漏
             mper?.release()
             mper = null
         }
-    }*/
+    }
 
         var Animals = listOf(
         R.drawable.animal0, R.drawable.animal1,
@@ -190,8 +190,8 @@ fun Main(modifier: Modifier = Modifier) {
         Row {
             Button(
                 onClick = {
-                    /*mper?.release()  //釋放資源
-                    mper = null*/
+                    mper?.release()  //釋放資源
+                    mper = null
 
                     mper = MediaPlayer.create(context, R.raw.tcyang) //設定音樂
                     mper?.start()
@@ -210,8 +210,8 @@ fun Main(modifier: Modifier = Modifier) {
             // **「展翅飛翔」按鈕：onClick 恢復為空**
             Button(
                 onClick = {
-                    /*mper?.release()  //釋放資源
-                    mper = null*/
+                    mper?.release()  //釋放資源
+                    mper = null
 
                     mper = MediaPlayer.create(context, R.raw.fly) //設定音樂
                     mper?.start()

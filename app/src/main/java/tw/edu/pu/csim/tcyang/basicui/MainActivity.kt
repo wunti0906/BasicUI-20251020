@@ -2,6 +2,7 @@ package tw.edu.pu.csim.tcyang.basicui
 
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -14,9 +15,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
@@ -31,6 +33,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+// 引入 Compose 狀態管理
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import tw.edu.pu.csim.tcyang.basicui.ui.theme.BasicUITheme
 
 class MainActivity : ComponentActivity() {
@@ -51,6 +58,10 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Main(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+
+    // **狀態變數 1: 追蹤要顯示的文字 (abc 或 def)**
+    var displayText by remember { mutableStateOf("abc") }
 
     var Animals = listOf(R.drawable.animal0, R.drawable.animal1,
         R.drawable.animal2, R.drawable.animal3,
@@ -64,10 +75,10 @@ fun Main(modifier: Modifier = Modifier) {
 
     Column (
         modifier = modifier
-            .fillMaxSize() // 1. 設定全螢幕（填滿父容器）
-            .background(Color(0xFFE0BBE4)), // 4. 設定背景為淺紫色
-        horizontalAlignment = Alignment.CenterHorizontally, // 2. 設定水平置中
-        verticalArrangement = Arrangement.Top // 3. 設定垂直靠上
+            .fillMaxSize()
+            .background(Color(0xFFE0BBE4)),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
     ) {
         Text(text = stringResource(R.string.app_title),
             fontSize = 25.sp,
@@ -94,7 +105,7 @@ fun Main(modifier: Modifier = Modifier) {
                     .clip(CircleShape)
                     .background(Color.Yellow),
                 alpha = 0.6f,
-                )
+            )
 
             Image(
                 painter = painterResource(id = R.drawable.compose),
@@ -125,11 +136,50 @@ fun Main(modifier: Modifier = Modifier) {
 
             }
 
-
-
         }
 
+        Spacer(modifier = Modifier.size(10.dp))
 
+        // **顯示狀態變數的文字 (在按鈕上面)**
+        Text(
+            text = displayText,
+            fontSize = 30.sp,
+            color = Color.Red,
+            modifier = Modifier.padding(10.dp)
+        )
 
+        Spacer(modifier = Modifier.size(10.dp))
+
+        Row{
+            Button(onClick = {
+                // 顯示 Toast 短訊息
+                Toast.makeText(
+                    context,
+                    "歡迎修課！這是一個短訊息。",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }) {
+                Text(text = "歡迎修課")
+            }
+
+            Spacer(modifier = Modifier.size(10.dp))
+
+            // **「展翅飛翔」按鈕：切換 displayText 的值**
+            Button(onClick = {
+                // 檢查當前的值，並切換到另一個值
+                displayText = if (displayText == "abc") "def" else "abc"
+            }) {
+                Text(text = "展翅飛翔")
+            }
+
+            Spacer(modifier = Modifier.size(10.dp))
+
+            Button(onClick = {
+                // 結束 App 的邏輯
+                (context as? ComponentActivity)?.finish()
+            }) {
+                Text(text = "結束App")
+            }
+        }
     }
 }
